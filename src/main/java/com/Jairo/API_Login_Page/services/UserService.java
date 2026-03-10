@@ -2,8 +2,10 @@ package com.Jairo.API_Login_Page.services;
 
 
 import com.Jairo.API_Login_Page.entity.User;
+import com.Jairo.API_Login_Page.exceptions.ResoruceNotFoundExption;
 import com.Jairo.API_Login_Page.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,9 +24,31 @@ public class UserService {
 
 
     public User FindByID(Long id){
-        Optional<User> obj=userRepository.findById(id);
-        return obj.get();
+        User user=userRepository.findById(id).orElseThrow(()-> new ResoruceNotFoundExption("Id do usuário não encontrado"));
+
+        return user;
 
     }
+
+
+    public User SaveUser(User user){
+        return userRepository.save(user);
+
+    }
+
+
+    public void UptadePassword(Long id , String senha){
+          User entity = userRepository.findById(id).orElseThrow( ()-> new ResoruceNotFoundExption("Id do usuário não encontrado"));
+
+
+
+
+        BCryptPasswordEncoder encoder=new BCryptPasswordEncoder();
+        entity.setSenha(encoder.encode(senha));
+
+        userRepository.save(entity);
+
+    }
+
 
 }
