@@ -4,7 +4,7 @@ API simples de **login e cadastro de usuários** desenvolvida com **Java e Sprin
 
 ## 🚀 Tecnologias
 
-* Java 17
+* Java 21
 * Spring Boot
 * Spring Web
 * Spring Data JPA
