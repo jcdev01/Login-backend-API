@@ -6,6 +6,7 @@ import com.Jairo.API_Login_Page.exceptions.ResoruceNotFoundExption;
 import com.Jairo.API_Login_Page.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +17,9 @@ public class UserService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
 
     public List<User> FindAll(){
@@ -31,20 +35,10 @@ public class UserService {
     }
 
 
-    public User SaveUser(User user){
-        return userRepository.save(user);
-
-    }
-
 
     public void UptadePassword(Long id , String senha){
           User entity = userRepository.findById(id).orElseThrow( ()-> new ResoruceNotFoundExption("Id do usuário não encontrado"));
-
-
-
-
-        BCryptPasswordEncoder encoder=new BCryptPasswordEncoder();
-        entity.setSenha(encoder.encode(senha));
+          entity.setPassword(passwordEncoder.encode(senha));
 
         userRepository.save(entity);
 
