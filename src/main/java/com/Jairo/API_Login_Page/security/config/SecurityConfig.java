@@ -33,16 +33,18 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
+                .csrf(csrf -> csrf.disable()
+                )
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .headers(headers -> headers.frameOptions(frame -> frame.disable()))
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                // STATELESS → sem sessão, cada requisição usa o token JWT
+
                 .authorizeHttpRequests(auth -> auth
                                 .requestMatchers("/h2-console/**").permitAll()
                                 .requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/users/**").permitAll()
                                 // /auth/register, /auth/login, /auth/confirm → público
                                 .anyRequest().authenticated()
 
@@ -84,5 +86,4 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 }

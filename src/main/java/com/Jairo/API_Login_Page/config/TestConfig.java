@@ -22,7 +22,7 @@ public class TestConfig implements CommandLineRunner{
     @Override
     public void run(String... args) throws Exception {
 
-        User user1=new User("Jairo","Jairocostanascimento@gmail.com","1234");
+        User user1=new User("laura","Laura@gmail.com","1234");
         userRepository.save(user1);
 
 

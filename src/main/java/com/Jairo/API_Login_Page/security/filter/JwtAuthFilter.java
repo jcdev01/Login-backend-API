@@ -29,6 +29,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
+
+
     ) throws ServletException, IOException {
 
         final String authHeader = request.getHeader("Authorization");
@@ -66,8 +68,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getServletPath();
-        return path.startsWith("/auth/");
-        // pula o filter para rotas públicas
-        // o Spring Security cuida da autorização depois
+        return path.startsWith("/auth/") || path.startsWith("/h2-console");
+
     }
 }
