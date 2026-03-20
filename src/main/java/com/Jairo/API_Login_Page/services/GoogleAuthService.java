@@ -11,11 +11,13 @@ import com.google.api.client.json.JsonGenerator;
 import com.google.api.client.json.JsonParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.Collections;
+import java.util.UUID;
 
 @Service
 public class GoogleAuthService {
@@ -26,6 +28,10 @@ public class GoogleAuthService {
 
     @Autowired
     JwtService jwtService;
+
+    @Autowired
+
+    PasswordEncoder passwordEncoder;
 
     @Value("${google.client.id}")
     private String cliente_id;
@@ -56,6 +62,8 @@ public class GoogleAuthService {
                         User newUser = new User();
                         newUser.setEmail(email);
                         newUser.setNome(name);
+                        newUser.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
+                        newUser.setEnabled(true);
                         return repository.save(newUser);
                     });
 
