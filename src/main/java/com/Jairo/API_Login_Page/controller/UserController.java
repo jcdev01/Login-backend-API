@@ -52,8 +52,6 @@ public class UserController {
     }
 
 
-
-
     @PutMapping(value = "/{id}/senha")
     public ResponseEntity<Void> UpdatePassword(@PathVariable Long id, @RequestBody @Valid UserPasswordUpdateDTO userDTO){
 
