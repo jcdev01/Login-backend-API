@@ -50,7 +50,7 @@ public class AuthService {
         );
         tokenRepository.save(confirmationToken);
 
-        String link = "http://localhost:8080/auth/confirm?token=" + token;
+        String link = "https://login-backend-api-production-43f3.up.railway.app/auth/confirm?token=" + token;
         emailService.sendConfirmationEmail(user.getEmail(), user.getNome(), link);
     }
 
