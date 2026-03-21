@@ -1,30 +1,44 @@
 package com.Jairo.API_Login_Page.services;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import sendinblue.ApiClient;
+import sendinblue.ApiException;
+import sendinblue.Configuration;
+import sibApi.TransactionalEmailsApi;
+import sibModel.SendSmtpEmail;
+import sibModel.SendSmtpEmailSender;
+import sibModel.SendSmtpEmailTo;
+
+import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class EmailService {
 
-    private final JavaMailSender mailSender;
+    @Value("${brevo.api.key}")
+    private String apiKey;
 
     public void sendConfirmationEmail(String to, String nome, String link) {
-        SimpleMailMessage message = new SimpleMailMessage();
+        try {
+            ApiClient client = Configuration.getDefaultApiClient();
+            client.setApiKey(apiKey);
 
-        message.setFrom("jairocostanascimento@gmail.com");
-        message.setTo(to);
-        message.setSubject("Confirme seu cadastro");
-        message.setText(
-                "Olá " + nome + ",\n\n" +
-                        "Clique no link abaixo para confirmar seu cadastro:\n\n" +
-                        link + "\n\n" +
-                        "O link expira em 24 horas.\n\n" +
-                        "Se você não se cadastrou, ignore este email."
-        );
+            TransactionalEmailsApi api = new TransactionalEmailsApi();
 
-        mailSender.send(message);
+            SendSmtpEmail email = new SendSmtpEmail();
+            email.setTo(List.of(new SendSmtpEmailTo().email(to).name(nome)));
+            email.setSender(new SendSmtpEmailSender().email("jairocostanascimento@gmail.com").name("API Login"));
+            email.setSubject("Confirme seu cadastro");
+            email.setTextContent(
+                    "Olá " + nome + ",\n\n" +
+                            "Clique no link abaixo para confirmar seu cadastro:\n\n" +
+                            link + "\n\n" +
+                            "O link expira em 24 horas."
+            );
+
+            api.sendTransacEmail(email);
+        } catch (ApiException e) {
+            throw new RuntimeException("Erro ao enviar email: " + e.getMessage());
+        }
     }
 }
