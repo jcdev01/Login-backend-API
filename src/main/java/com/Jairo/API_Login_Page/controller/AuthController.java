@@ -35,9 +35,9 @@ public class AuthController {
 
 
     @GetMapping(value = "/confirm")
-    public ResponseEntity<MessageReponseDTO> confirm(@RequestParam String token){
+    public ResponseEntity<Void> confirm(@RequestParam String token){
         authService.confirm(token);
-        return ResponseEntity.ok(new MessageReponseDTO("Autenticação bem sucedida"));
+        return ResponseEntity.status(302).header("Location, http://127.0.0.1:5500/confirmado.html").build();
     }
 
 
